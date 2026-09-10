@@ -3,6 +3,10 @@
 This is a purposefully simplified view of the lab. It describes roles, not
 addresses, routes, ports, account names, or access methods.
 
+For the specific software behind these roles, read
+[the tooling guide](tooling-guide.md). It covers each tool's job, what has
+worked here, and a suggested learning sequence for building your own setup.
+
 ```text
                          Home network
                               |

@@ -66,6 +66,9 @@ not contain production configuration.
 
 - Start with [the architecture overview](docs/architecture.md) for the shape
   of the setup.
+- Explore [the tools behind the lab](docs/tooling-guide.md) for OpenTofu,
+  Uptime Kuma, and the other software, with first projects and official guides
+  for building your own version.
 - Read [what I learned building it](docs/what-i-learned.md) for the practical
   takeaways.
 - Use [the publishing checklist](docs/before-you-publish.md) before adding a
