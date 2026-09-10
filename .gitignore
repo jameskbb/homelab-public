@@ -1,0 +1,24 @@
+# Never add private configuration or recovered data to this public repository.
+.env
+.env.*
+*.pem
+*.key
+id_*
+*.tfstate
+*.tfstate.*
+*.vault
+*.age
+*.kdbx
+*.bak
+*.backup
+*.log
+*.pcap
+*.zip
+*.tar
+*.gz
+*.7z
+
+# Keep unreviewed captures and exports out until they pass the checklist.
+screenshots/
+exports/
+private/
