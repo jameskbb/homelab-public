@@ -42,11 +42,3 @@ recovery. Public notes have a different job: explain the decisions, the
 learning, and the outcomes without sharing internal routes, service links,
 account details, or secrets. Both documents can be honest, but they should not
 be the same document.
-
-## Good future blog posts
-
-1. Why I used an old desktop instead of buying a server.
-2. How one machine became three separate environments.
-3. The first time a restore test changed my confidence in backups.
-4. What game hosting taught me about keeping hobbies reliable.
-5. How I decide whether a project belongs in the homelab at all.

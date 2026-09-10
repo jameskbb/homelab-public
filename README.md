@@ -60,9 +60,10 @@ services.
 
 ## What this repository is, and is not
 
-This is a snapshot for people who want inspiration for a first homelab or a
-blog post about learning in public. It is not an installation guide and it does
-not contain production configuration.
+This is a reference for people who want inspiration for a first homelab and
+practical details about the tools used to build it. My blog lives separately
+and may link here for the setup documentation. This repository does not contain
+blog posts or production configuration.
 
 - Start with [the architecture overview](docs/architecture.md) for the shape
   of the setup.
@@ -72,7 +73,7 @@ not contain production configuration.
 - Read [what I learned building it](docs/what-i-learned.md) for the practical
   takeaways.
 - Use [the publishing checklist](docs/before-you-publish.md) before adding a
-  screenshot, diagram, or new story.
+  screenshot, diagram, or documentation update.
 
 ## Deliberately not public
 

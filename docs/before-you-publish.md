@@ -1,7 +1,7 @@
 # Public sharing checklist
 
 Use this checklist before adding a screenshot, photo, diagram, log excerpt, or
-new post. A public repository is easy to copy and difficult to take back.
+documentation update. A public repository is easy to copy and difficult to take back.
 
 ## Check the content
 
@@ -12,11 +12,11 @@ new post. A public repository is easy to copy and difficult to take back.
 3. Crop screenshots to exclude browser tabs, bookmarks, notifications, file
    paths, timestamps, and network details.
 4. Replace exact storage sizes, software versions, and service names when they
-   would reveal more detail than the story needs.
+   would reveal more detail than the explanation needs.
 5. Do not include configuration exports, logs, backup archives, command
    histories, or infrastructure state files.
 
-## Check the story
+## Check the explanation
 
 Ask whether a reader can learn something useful without being able to identify
 the home, the network, or a route into the lab. If the answer is yes, the
