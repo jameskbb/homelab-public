@@ -1,3 +1,7 @@
+# Local agent context stays out of public commits, including in subdirectories.
+AGENTS.md
+CLAUDE.md
+
 # Never add private configuration or recovered data to this public repository.
 .env
 .env.*
