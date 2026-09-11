@@ -2,11 +2,10 @@
 
 This is the software shortlist I would share with someone building a similar
 home setup. It explains what each tool does, where I use it, and a small first
-project you can try. Most of these are applications and automation tools;
-you do not need to write your own software library to use them.
+project you can try. Most of these are applications and automation tools.
 
 The experience notes describe work recorded in this lab through September
-2026. The project links were checked on 2026-09-10. Use each project's current
+2026. The project links were checked on 2026-09-11. Use each project's current
 installation instructions and compatibility guidance when building your own
 setup. This is a guide to recreating the approach, with choices left for your
 hardware and needs.
@@ -15,9 +14,14 @@ If you only want an early win, start with one Linux virtual machine, Docker
 Compose, Homepage, and Uptime Kuma. Add automation once you understand the
 steps you want to repeat, and practice a restore before storing important data.
 
-Jump to [OpenTofu](#opentofu-describe-the-virtual-computer-you-want),
-[Uptime Kuma](#uptime-kuma-see-when-something-stops-responding), or
+Explore [the foundation](#the-foundation),
+[repeatable setup](#making-setup-repeatable),
+[everyday services and recovery](#everyday-services-and-recovery),
+[game hosting](#game-hosting), or
 [the build order](#a-practical-build-order-for-your-own-version).
+
+For the decisions and recorded checks connecting these tools, read the
+[project walkthroughs](projects.md).
 
 ## How the pieces fit together
 
@@ -158,9 +162,11 @@ instead of relying on a long command typed once.
 Linux VM, then follow Homepage's example below.
 [Docker's Debian installation guide](https://docs.docker.com/engine/install/debian/).
 
-Learn where the app saves its data. A **volume** is storage kept separately
-from the disposable container. Recreating a container is not the same thing
-as recovering its data; record and back up the persistent data you need.
+Learn where the app saves its data. A **volume** is persistent storage managed
+by Docker; a **bind mount** connects a folder on the VM to the container. Both
+can keep data outside the container itself. Recreating a container is not the
+same thing as recovering its data; record and back up the persistent data you
+need. [Docker storage documentation](https://docs.docker.com/engine/storage/).
 
 ## Everyday services and recovery
 
@@ -175,7 +181,8 @@ configuration has been managed in Git and deployed successfully.
 
 **First project:** make a small page with a few links to your own services.
 Begin with ordinary links, then add an integration only when its information
-helps you. This keeps the first version easy to understand.
+helps you. Follow the installation guide's required settings; ordinary links
+do not need a Docker integration.
 [Homepage Docker installation](https://gethomepage.dev/installation/docker/).
 
 Homepage answers "where do I go?" Uptime Kuma adds the separate question
@@ -297,4 +304,5 @@ The result to aim for is a small service you can explain, monitor, and recover.
 That is a useful foundation for deciding what to add next.
 
 [Back to the homelab overview](../README.md) |
-[See the architecture overview](architecture.md)
+[See the architecture overview](architecture.md) |
+[Read the project walkthroughs](projects.md)
