@@ -4,6 +4,10 @@ This is the software shortlist I would share with someone building a similar
 home setup. It explains what each tool does, where I use it, and a small first
 project you can try. Most of these are applications and automation tools.
 
+If you are new to servers, begin with [Your first homelab](start-here.md) for
+plain-language definitions and a smaller first project. You can return here
+for a particular tool when you reach the step that uses it.
+
 The experience notes describe work recorded in this lab through September
 2026. The project links were checked on 2026-09-11. Use each project's current
 installation instructions and compatibility guidance when building your own
@@ -26,20 +30,21 @@ For the decisions and recorded checks connecting these tools, read the
 ## How the pieces fit together
 
 A virtual machine, or VM, is a separate computer implemented in software.
-A container packages an application and its dependencies while sharing its
-host's operating-system kernel. In this lab, application containers run inside
-VMs.
+A container packages an application and the supporting software it needs while
+sharing the core of the operating system it runs on. In this lab, application
+containers run inside VMs.
 
 | Job | Tools used here | Where they work |
 | --- | --- | --- |
-| Run separate virtual computers | Proxmox VE; Debian inside the VMs | Physical server and its guests |
+| Run separate virtual computers | Proxmox VE; Debian inside the VMs | Physical server and its VMs |
 | Create and prepare those computers | OpenTofu with the bpg Proxmox provider; cloud-init; Ansible | Administration computer and the VMs it manages |
 | Run everyday applications | Docker Engine and Compose; Homepage | Applications VM |
 | Check availability and protect data | Uptime Kuma; restic | Services and their backup workflows |
 | Host games | Pterodactyl Panel and Wings; Paper | Games VM |
 
-Git keeps the configuration and documentation changes reviewable. It is useful
-across these layers, but committing a file does not change a running service.
+Git keeps changes to settings and documentation reviewable. A **commit** is a
+saved checkpoint of changes to files. Saving that checkpoint does not itself
+change a running service.
 
 ## The foundation
 
@@ -217,8 +222,10 @@ It lets you restore files from snapshots, which record the contents of a
 backup run. [Restic documentation](https://restic.readthedocs.io/en/stable/).
 
 **What worked here:** encrypted offsite copies and restore tests have been
-completed for selected application and game data. The recovery workflow first
-prepares suitable application backups, then uses restic for the offsite copy.
+completed for selected application and game data. Offsite means the backup is
+stored in another location; encryption protects its contents with a password.
+The recovery workflow first prepares suitable application backups, then uses
+restic for the offsite copy.
 
 **First project:** back up a folder of disposable sample files, restore it to
 a different folder, and compare the contents. Start with the
@@ -227,11 +234,12 @@ Then choose a destination outside
 the machine whose loss you want to survive.
 [Restic restore guide](https://restic.readthedocs.io/en/stable/050_restore.html).
 
-For live databases and games, use a backup method that produces consistent
-data before copying it. Restic cannot make an arbitrary copy of changing files
-application-consistent. Keep the backup password recoverable separately from
-the server. These selected-data restores do not establish complete physical-host
-recovery.
+For databases and games that are running, follow the application's own backup
+procedure before copying its data. An **application-consistent backup** contains
+data the application can use to recover correctly; copying files while they
+are changing may not produce that result. Keep the backup password recoverable
+separately from the server. The lab's tests recovered selected data; rebuilding
+the entire physical server was not covered by these exercises.
 
 ## Game hosting
 
@@ -288,7 +296,7 @@ project guides for installation details.
 | 4 | A restic practice backup, then an application-aware backup | Sample files restore correctly; you have also tested the application's own recovery on a spare instance. |
 | 5 | A separate VM built with cloud-init, OpenTofu, and Ansible | It can be created and configured from your definitions, and repeat checks show the intended state. |
 
-Keep your working notes in Git throughout. In step 5, practice on a new VM
+If you use Git, keep your working notes there throughout. In step 5, practice on a new VM
 rather than assuming OpenTofu automatically manages the manually created
 learning VM. After these foundations, add game hosting if it is useful to you.
 
@@ -304,5 +312,6 @@ The result to aim for is a small service you can explain, monitor, and recover.
 That is a useful foundation for deciding what to add next.
 
 [Back to the homelab overview](../README.md) |
+[Plan a first lab](start-here.md) |
 [See the architecture overview](architecture.md) |
 [Read the project walkthroughs](projects.md)
