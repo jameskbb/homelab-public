@@ -63,6 +63,8 @@ much smaller.
 Read [Your first homelab](docs/start-here.md) for a small starting project,
 the words you will encounter, and a path from a working application to a
 practice restore. It leads into the installation references when you are ready.
+The [worked examples](examples/README.md) show what the configuration files
+look like, using fictional values you can adapt.
 
 ## Where to go next
 
@@ -72,6 +74,8 @@ practice restore. It leads into the installation references when you are ready.
 | How the different parts fit together | [Architecture overview](docs/architecture.md) |
 | What happened while building and fixing things | [Project walkthroughs](docs/projects.md) |
 | Which tools I used and where to learn them | [Tooling guide](docs/tooling-guide.md) |
+| Why I chose these tools and when simpler ones would do | [Why the lab is built this way](docs/decisions.md) |
+| What the configuration files look like | [Worked examples](examples/README.md) |
 | What I would carry into another build | [What I learned](docs/what-i-learned.md) |
 
 ## About the public version

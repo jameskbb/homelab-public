@@ -39,6 +39,17 @@ its virtual computer.
 The tradeoff is more operating systems to update. Separation can reduce
 interference from software changes, but the physical desktop failing or running
 out of memory or processing capacity can affect all three environments.
+[Why the lab is built this way](decisions.md) explains this and the other
+choices, including when a simpler setup would do.
+
+## Rebuildable over precious
+
+One principle shapes the rest of the design: everything except the data
+should be recreatable from written definitions. The VMs, their operating
+systems, and the software they run are **rebuildable**. A game world, a
+monitor's history, and an application's saved settings are **precious**: no
+definition can put them back. Backups protect the precious data; the
+definitions and their automation put back everything around it.
 
 ## From a definition to a running service
 
@@ -64,18 +75,30 @@ signals from backup jobs. Those checks help identify interruptions; each one
 answers only the question it was configured to ask. A responding service may
 still need a check of what you actually use it for, such as joining a game.
 
-The backup workflow prepares suitable application and game data, then uses
-restic to make encrypted offsite copies: backups stored in another location and
-protected with a password. Recovery exercises have covered selected application
-data and two Minecraft environments. See the
-[recovery walkthrough](projects.md#game-hosting-and-recovery) for the result
-and its limits.
-
 The monitor runs on the same physical server as the applications it watches.
 It cannot report from there when that server is off. Offsite data copies help
-with a different problem: retaining data outside the machine. These tests
-recovered selected application and game data; rebuilding the entire physical
-server was not covered by these exercises.
+with a different problem: retaining data outside the machine.
+
+The backup workflow prepares suitable application and game data, then uses
+restic to make encrypted offsite copies: backups stored in another location and
+protected with a password. Recovery reverses the path and adds a step the
+backup does not contain, because the software around the data is rebuilt
+rather than restored.
+
+```mermaid
+flowchart LR
+    data["Precious data:<br>world, settings, history"] --> app["Application's own<br>backup step"]
+    app --> local["Consistent local copy"]
+    local --> restic["restic: encrypt<br>and deduplicate"]
+    restic --> offsite["Offsite storage"]
+    offsite -. "restore" .-> restored["Restored data"]
+    defs["Written definitions:<br>OpenTofu, Ansible, panel"] --> rebuilt["Rebuilt VM and<br>reinstalled software"]
+    restored --> verify["Start the service<br>and check it works"]
+    rebuilt --> verify
+```
+
+The [recovery walkthrough](projects.md#game-hosting-and-recovery) describes
+the drills that exercised this path and what they did and did not cover.
 
 ## Boundaries that matter
 
@@ -86,10 +109,9 @@ home network or provide an administration path into it.
 
 ## Applying the design to a first lab
 
-Start with one useful service. Identify its saved data, decide what a successful
-restore would look like, and try that recovery before adding more workloads.
-Separate environments when their maintenance needs justify it; the useful
-starting point is a setup you can explain and recover.
+Start with one useful service, learn which of its data is precious, and try
+recovering it before adding more. [Your first homelab](start-here.md) turns
+that into a sequence of small steps.
 
 [Back to the homelab overview](../README.md) |
 [Plan a first lab](start-here.md) |

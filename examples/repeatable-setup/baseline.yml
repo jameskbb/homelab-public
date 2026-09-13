@@ -1,0 +1,40 @@
+# Example only. Fictional values; adapt before use.
+#
+# A small Ansible playbook: the settings every VM in the lab should have.
+# Run it twice. The first run reports changes; the second should report
+# none, which shows the playbook describes a state rather than a sequence
+# of commands (this is called idempotence).
+#
+# Preview:   ansible-playbook -i inventory.ini baseline.yml --check --diff
+# Apply:     ansible-playbook -i inventory.ini baseline.yml
+
+- name: Baseline for every lab VM
+  hosts: lab
+  become: true
+
+  tasks:
+    - name: Install everyday tools and the guest agent
+      ansible.builtin.apt:
+        name:
+          - curl
+          - htop
+          - qemu-guest-agent   # lets Proxmox see the VM's state and addresses
+        state: present
+        update_cache: true
+
+    - name: Make sure the guest agent is running
+      ansible.builtin.service:
+        name: qemu-guest-agent
+        state: started
+        enabled: true
+
+    - name: Install Docker Engine on the hosts that run containers
+      when: inventory_hostname in groups['docker_hosts']
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-compose-plugin
+        state: present
+      # This task assumes Docker's own package repository has already been
+      # added. Follow Docker's Debian installation guide for that step, or
+      # add tasks for it here once you understand what they do.

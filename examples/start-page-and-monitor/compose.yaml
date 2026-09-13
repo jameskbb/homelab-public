@@ -1,0 +1,37 @@
+# Example only. Fictional values; adapt before use.
+#
+# Runs two everyday services with Docker Compose: Homepage, a start page,
+# and Uptime Kuma, a monitor. The lab keeps these in separate Compose files
+# so each can be changed on its own; they are combined here to keep the
+# example short.
+#
+# Start with:   docker compose up -d
+# Stop with:    docker compose down      (data in the two folders survives)
+
+services:
+  homepage:
+    # Pin a version you have tested instead of "latest" once you rely on it.
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    ports:
+      - "3000:3000"            # Homepage's default port on the VM
+    volumes:
+      # A bind mount: the folder next to this file becomes /app/config
+      # inside the container. Homepage reads its YAML settings from there.
+      - ./homepage-config:/app/config
+    environment:
+      # Recent Homepage releases refuse requests from unknown host names.
+      # List the names you will type into a browser.
+      HOMEPAGE_ALLOWED_HOSTS: "localhost:3000,apps.homelab.example:3000"
+    restart: unless-stopped
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: uptime-kuma
+    ports:
+      - "3001:3001"            # Uptime Kuma's default port on the VM
+    volumes:
+      # Uptime Kuma keeps its monitors, history, and login in a small
+      # database under /app/data. This folder is the data you back up.
+      - ./uptime-kuma-data:/app/data
+    restart: unless-stopped

@@ -12,7 +12,8 @@ smaller starting point.
 The outcomes summarize work recorded through September 2026. Operational
 configuration and detailed execution records remain private; these are curated
 technical explanations. For tool definitions and official setup guides, see
-the [tooling guide](tooling-guide.md).
+the [tooling guide](tooling-guide.md). For the reasoning behind the tool
+choices, see [Why the lab is built this way](decisions.md).
 
 ## Everyday applications and monitoring
 
@@ -44,8 +45,8 @@ changed.
 
 **The tradeoff:** a monitor reports what its check can observe. A responding game
 service does not prove someone can join, and a backup-job success signal does
-not prove the data can be restored. The monitoring application also shares the
-physical server, so it cannot report from there when that server is off.
+not prove the data can be restored. The [architecture page](architecture.md#monitoring-and-recovery)
+notes the other limit: the monitor shares the physical server it watches.
 
 For your own version, run a small dashboard and monitor that test application.
 Observe a deliberate stop and recovery before depending on the check. See
@@ -111,7 +112,8 @@ reusable automation and exercised in the second Minecraft restore drill.
 
 This turned a successful backup into a more complete recovery procedure. The
 important question became whether the saved data and the software needed to use
-it could be brought back together.
+it could be brought back together. The
+[recovery diagram](architecture.md#monitoring-and-recovery) shows both paths.
 
 **The tradeoff:** selected-data backups reduce what must be copied, but recovery
 depends on knowing which software and configuration must be recreated. These

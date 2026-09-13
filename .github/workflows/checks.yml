@@ -1,0 +1,39 @@
+# Two automated checks that support the publishing checklist in
+# docs/before-you-publish.md. They catch broken links and obvious secrets;
+# they do not prove a change is safe to publish.
+
+name: checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  links:
+    name: Check document links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check links in Markdown files
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Some project sites answer automated requests with 403 or 429;
+          # those are treated as reachable rather than broken.
+          args: >-
+            --no-progress
+            --include-fragments
+            --accept 200,204,403,429
+            './**/*.md'
+          fail: true
+
+  secrets:
+    name: Scan for secrets
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scan history and working tree
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

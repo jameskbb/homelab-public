@@ -52,13 +52,15 @@ official guides supply the installation steps and current requirements.
 3. **Run a start page.** Docker runs application containers, and Compose records
    how to start them. Use the guide's [Docker setup](tooling-guide.md#docker-engine-and-compose-package-and-run-applications)
    and [Homepage example](tooling-guide.md#homepage-a-starting-page-for-your-services)
-   to make a small page with a few useful links. Keep the first version simple
-   enough that you understand each setting you change.
+   to make a small page with a few useful links. The
+   [start page and monitor example](../examples/start-page-and-monitor/)
+   shows a complete Compose file with fictional values. Keep the first
+   version simple enough that you understand each setting you change.
 4. **Notice a stop and recovery.** Add [Uptime Kuma](tooling-guide.md#uptime-kuma-see-when-something-stops-responding)
    to watch that test page. Stop the test application, observe the check report
    it down, then start it and observe recovery.
 5. **Practice bringing data back.** Begin with copies of disposable sample files
-   and the [restic backup exercise](tooling-guide.md#restic-encrypted-backups-with-a-recovery-path).
+   and the [restic practice exercise](../examples/restic-practice.md).
    Then learn where your application saves its data and try its recovery on a
    separate test instance before relying on it for important information.
 
@@ -76,7 +78,9 @@ Keep a short set of notes as you go: what you installed, why you chose it,
 which settings you changed, and how you tested recovery. Leave passwords out of
 those notes. Git is an optional way to keep a history of changes to your notes
 from the start. When setup steps become repetitive, explore
-[the automation tools](tooling-guide.md#making-setup-repeatable).
+[the automation tools](tooling-guide.md#making-setup-repeatable) and the
+[repeatable setup example](../examples/repeatable-setup/), which shows one
+VM definition and one small playbook side by side.
 
 ## Learn from the parts that needed fixing
 

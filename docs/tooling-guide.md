@@ -24,8 +24,11 @@ Explore [the foundation](#the-foundation),
 [game hosting](#game-hosting), or
 [the build order](#a-practical-build-order-for-your-own-version).
 
-For the decisions and recorded checks connecting these tools, read the
-[project walkthroughs](projects.md).
+For the recorded checks connecting these tools, read the
+[project walkthroughs](projects.md). For why each tool was chosen over a
+simpler option, read [Why the lab is built this way](decisions.md). The
+[worked examples](../examples/README.md) show what the configuration files
+look like, with fictional values.
 
 ## How the pieces fit together
 
@@ -123,7 +126,8 @@ compatibility and authentication requirements when choosing versions.
 [provider documentation](https://bpg.sh/docs/).
 
 **First project:** define one disposable VM in your own environment and read
-its plan before applying it. Confirm a later plan proposes no unexpected
+its plan before applying it. The [example VM definition](../examples/repeatable-setup/vm.tf)
+shows the shape of one. Confirm a later plan proposes no unexpected
 changes. Keep OpenTofu's state file private and recoverable: it records the
 resources under management and can contain sensitive values.
 
@@ -144,7 +148,8 @@ roles. Repeat runs have been used to check that configured systems match the
 intended setup.
 
 **First project:** automate one small task in a disposable VM, such as ensuring
-a package is installed. Run it again and confirm it reports no change when
+a package is installed. The [example playbook](../examples/repeatable-setup/baseline.yml)
+does that and little more. Run it again and confirm it reports no change when
 the desired state already exists. This behavior is called idempotence.
 
 Ansible's check and diff modes can preview supported tasks, but some tasks
@@ -164,7 +169,9 @@ definitions on the applications VM. Each application's setup has a clear home
 instead of relying on a long command typed once.
 
 **First project:** install Docker Engine and the Compose plugin inside your
-Linux VM, then follow Homepage's example below.
+Linux VM, then follow Homepage's example below. The
+[example Compose file](../examples/start-page-and-monitor/compose.yaml) is
+annotated line by line.
 [Docker's Debian installation guide](https://docs.docker.com/engine/install/debian/).
 
 Learn where the app saves its data. A **volume** is persistent storage managed
@@ -184,7 +191,8 @@ services. Its configuration can be written in YAML.
 **What worked here:** it provides the lab's start page, and its visual
 configuration has been managed in Git and deployed successfully.
 
-**First project:** make a small page with a few links to your own services.
+**First project:** make a small page with a few links to your own services,
+like the [example links file](../examples/start-page-and-monitor/homepage-config/services.yaml).
 Begin with ordinary links, then add an integration only when its information
 helps you. Follow the installation guide's required settings; ordinary links
 do not need a Docker integration.
@@ -201,19 +209,14 @@ signal after it runs. It also supports notifications through multiple services.
 [Uptime Kuma project and installation guide](https://github.com/louislam/uptime-kuma).
 
 **What worked here:** checks for applications and game services were verified,
-and backup jobs have sent success signals. A restore exercise also produced
-a recorded outage and recovery, demonstrating that a monitor caught a real
-interruption.
+and backup jobs have sent success signals. A monitor has also caught a real
+interruption; the [monitoring walkthrough](projects.md#everyday-applications-and-monitoring)
+describes that and what a passing check does not tell you.
 
 **First project:** create a web-page monitor for your test Homepage instance.
 Briefly stop only that test app, confirm the monitor changes to down, then
 start it and confirm recovery. Test notification delivery separately if you
 configure notifications.
-
-A passing check answers only the question you configured. A responding game
-service does not prove a player can join; a backup-job signal does not prove
-the backup can be restored. If the machine running the monitor is off, it
-cannot report from there.
 
 ### restic: encrypted backups with a recovery path
 
@@ -228,18 +231,17 @@ The recovery workflow first prepares suitable application backups, then uses
 restic for the offsite copy.
 
 **First project:** back up a folder of disposable sample files, restore it to
-a different folder, and compare the contents. Start with the
-[restic quickstart](https://restic.readthedocs.io/en/stable/010_introduction.html).
-Then choose a destination outside
-the machine whose loss you want to survive.
+a different folder, and compare the contents. The
+[restic practice exercise](../examples/restic-practice.md) walks through
+exactly that. Then choose a destination outside the machine whose loss you
+want to survive.
 [Restic restore guide](https://restic.readthedocs.io/en/stable/050_restore.html).
 
 For databases and games that are running, follow the application's own backup
 procedure before copying its data. An **application-consistent backup** contains
 data the application can use to recover correctly; copying files while they
 are changing may not produce that result. Keep the backup password recoverable
-separately from the server. The lab's tests recovered selected data; rebuilding
-the entire physical server was not covered by these exercises.
+separately from the server.
 
 ## Game hosting
 
@@ -284,21 +286,12 @@ adding a management panel.
 
 ## A practical build order for your own version
 
-This is a suggested learning sequence, not a claim that every step is
-automatic. Keep experiments on your own test equipment and use the linked
-project guides for installation details.
-
-| Step | Build | You have reached the checkpoint when... |
-| --- | --- | --- |
-| 1 | One Debian VM on a spare Proxmox machine | The VM boots and you can use its console. |
-| 2 | Docker Compose and a simple Homepage | Your start page works and its configuration survives replacing the test container. |
-| 3 | Uptime Kuma watching that test application | You have observed both a deliberate interruption and recovery. |
-| 4 | A restic practice backup, then an application-aware backup | Sample files restore correctly; you have also tested the application's own recovery on a spare instance. |
-| 5 | A separate VM built with cloud-init, OpenTofu, and Ansible | It can be created and configured from your definitions, and repeat checks show the intended state. |
-
-If you use Git, keep your working notes there throughout. In step 5, practice on a new VM
-rather than assuming OpenTofu automatically manages the manually created
-learning VM. After these foundations, add game hosting if it is useful to you.
+The step-by-step sequence lives in [Your first homelab](start-here.md#from-a-spare-computer-to-one-working-application):
+one VM, then a start page, a monitor, a practice restore, and finally
+automation. Keep experiments on your own test equipment and use the linked
+project guides for installation details. When you reach the automation step,
+practice on a new VM rather than assuming OpenTofu will adopt the one you
+built by hand. Add game hosting after those foundations if it is useful to you.
 
 To make your version reproducible, record these choices in your own private
 notes:

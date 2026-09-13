@@ -1,87 +1,69 @@
 # What I learned building a homelab
 
-The most useful lessons came from checking the work: repeating setup, observing
-an interruption, and restoring saved data. These notes reflect the exercises
-described in the [project walkthroughs](projects.md) through September 2026.
+These are the ideas I would carry into another build. The evidence behind
+each one is in the [project walkthroughs](projects.md), which describe the
+setup, checks, and fixes recorded through September 2026. This page keeps to
+the lessons rather than retelling the stories.
 
 ## Start with a useful job
 
-The project became useful when every addition answered a simple question: what
-problem does this solve at home? A start page reduces friction. Monitoring tells
-me when something is unavailable. Game servers create a shared place for
-friends. Those jobs made the project easier to prioritize than a list of
-hardware upgrades.
+The project became easier to prioritize once every addition had to answer a
+simple question: what problem does this solve at home? A start page reduces
+friction, a monitor says when something is unavailable, and a game server
+gives friends a shared place. A retired desktop was enough hardware to begin
+answering those questions, and it still is.
 
-## Ordinary hardware is enough to begin
+## Decide what is precious and what is rebuildable
 
-The retired desktop became the foundation for applications, games, and
-experiments. It provided a place to practice virtualization, Linux setup,
-monitoring, and recovery using hardware already available.
+The most useful design decision was drawing a line between data that cannot
+be recreated and everything that can. Worlds, settings, and monitor history
+are precious. Operating systems, runtimes, and downloaded software are
+rebuildable from written definitions. That line decided what to back up, what
+to automate, and what a restore has to include. It is explained on the
+[decisions page](decisions.md).
 
-All the virtual machines still share its physical resources. That makes
-understanding the shared limits part of the project.
+## A second run is the real test of automation
 
-## Keep different jobs separate
+Applying a configuration once shows that it can be applied. Applying it again
+and seeing no changes shows that it describes a state rather than a sequence
+of steps. Proving the process on a disposable VM before any permanent one
+existed made later mistakes cheaper. Even so, a clean second run only speaks
+for the tasks it manages; the application still needs its own check.
 
-Keeping applications, games, and experiments in different virtual computers
-gives their settings and updates separate homes. Supporting software for a game
-can change within the games environment, and an experiment has its own
-operating system. That is useful organization, even though a problem with the
-physical desktop can still affect every environment.
+## A monitor tells you where to look, not that things work
 
-## Repeatable setup needs a second run
+A check answers only the question it was configured to ask. A web page
+responding does not prove every feature works, and a backup job reporting
+success does not prove the backup can be restored. The check that earned my
+trust was one that recorded a real interruption and recovery during a restore
+exercise, rather than a dashboard that had only ever been green.
 
-Creating a test VM that could be discarded checked the setup process before
-using it for lasting projects. Running the configuration again checked whether
-it needed further changes when the intended setup already existed. The recorded
-second Ansible run reported no changes.
+## Configuration includes what the application needs to start
 
-Those checks answer specific questions. Applying settings can succeed while
-an application still needs a check of what it actually does. Keeping machine
-setup, application settings, and checks of the result distinct makes the work
-easier to understand.
+A settings file can look complete while the application still lacks
+something it expects at startup. Rolling back restored service; supplying the
+missing files fixed the next attempt. Since then, the files an application
+needs to start are recorded alongside the settings I actually wanted to change.
 
-## Test what a monitor can observe
+## A restore is not finished until the service runs
 
-A monitor recorded an interruption and recovery during an application restore
-exercise. That is more useful evidence than a dashboard that has only ever
-shown healthy services.
+Restoring files and recovering a service are different tasks. The Minecraft
+drill returned every byte of world data and still was not playable until the
+server software was reinstalled and its settings reapplied. Adding that step to
+the automation, then exercising it in a second drill, was worth more than the
+first backup was. Selected application and game restores now have recorded
+results; rebuilding the whole physical server has not been exercised.
 
-The scope of a check matters. A web response does not prove every feature works,
-and a backup success signal does not prove recovery. Monitoring helps identify
-where to look; the application and its data still need their own checks.
-
-## Configuration includes startup requirements
-
-A dashboard deployment exposed missing files expected by the application's
-startup process. Returning to the previous working setup restored service, and
-including the missing files allowed the next attempt to pass its checks.
-
-The lesson was to record the surrounding startup requirements along with the
-settings I wanted to manage. A configuration file can look complete while the
-application still lacks something it needs to start.
-
-## Backups become real at restore time
-
-The Minecraft restore drills showed why restoring files and recovering a
-service are different tasks. World data was backed up, while downloadable
-server and plugin files were excluded. The recovery workflow needed to put
-the server software and saved settings back alongside the restored data.
-
-Adding the missing reinstall step to automation and exercising it in the second
-drill improved the procedure. Selected application and Minecraft restores now
-have recorded results; rebuilding the entire physical server was not covered by
-these exercises.
-
-## Public sharing needs a different kind of documentation
+## Public notes are a different document
 
 The private build notes are detailed because they must support operation and
 recovery. Public notes have a different job: explain the decisions, the
 learning, and the outcomes without sharing internal routes, service links,
-account details, or secrets. Both documents can be honest, but they should not
-be the same document.
+account details, or secrets. Both can be honest without being the same
+document, and the [publishing checklist](before-you-publish.md) keeps the line
+between them.
 
 [Back to the homelab overview](../README.md) |
 [Plan a first lab](start-here.md) |
 [Read the project walkthroughs](projects.md) |
-[Explore the tools](tooling-guide.md)
+[Why the lab is built this way](decisions.md)

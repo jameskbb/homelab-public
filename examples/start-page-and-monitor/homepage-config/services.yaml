@@ -1,0 +1,21 @@
+# Example only. Fictional values; adapt before use.
+#
+# Homepage groups links under headings. Each entry needs at least a name
+# and an address. Plain links like these do not need any integration with
+# Docker or with the target service.
+
+- Lab:
+    - Uptime Kuma:
+        href: http://apps.homelab.example:3001
+        description: Is anything down?
+        icon: uptime-kuma.png
+    - Proxmox:
+        href: https://pve.homelab.example:8006
+        description: Virtual machines
+        icon: proxmox.png
+
+- Games:
+    - Minecraft survival:
+        href: https://docs.papermc.io/paper/
+        description: Server notes and rules
+        icon: minecraft.png

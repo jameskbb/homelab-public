@@ -29,7 +29,8 @@ establish recovery of an entire server. Date results when that context matters.
 Check that a reader can learn something useful without identifying the home,
 the network, or a route into the lab. Keep diagrams conceptual and label
 fictional examples. Review the complete change and check its document links
-before publishing. An automated scan can support this review, but it cannot
+before publishing. The repository's automated checks look for broken links
+and obvious secrets on every push. They support this review; they cannot
 prove that a file is safe to share.
 
 ## A safe screenshot pattern
