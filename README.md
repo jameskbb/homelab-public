@@ -1,5 +1,7 @@
 # My homelab
 
+![My Homelab title card: one retired desktop branches into applications, games, and experiments in a warm home workspace](docs/images/readme-title-homelab.png)
+
 This is a guide to the small home server I built from a retired desktop:
 what I use it for, why the pieces are there, and what you could try in your own
 setup. If a friend sent you this and you have never run a server, start here.
@@ -26,6 +28,8 @@ Those projects also create practical things to learn: setting up a computer,
 making a change without losing its data, and bringing an application back from
 a backup. The learning comes from looking after something I actually use.
 
+![What it does day to day section header: services, games, and experiments branch from one small home server](docs/images/readme-header-daily-use.png)
+
 ## What it does day to day
 
 | Part of the lab | What it is useful for |
@@ -41,6 +45,8 @@ two approachable examples to explore in the [tooling guide](docs/tooling-guide.m
 The game setup uses Pterodactyl for management and Paper for Minecraft; their
 roles are explained in [the game-hosting section](docs/tooling-guide.md#game-hosting).
 
+![One computer, different jobs section header: applications, games, and experiments run as separate environments](docs/images/readme-header-architecture.png)
+
 ## How one computer handles the different jobs
 
 The hardware is a Dell OptiPlex desktop with an Intel i7 processor, 32 GB of
@@ -54,6 +60,8 @@ the physical desktop, so a problem with that computer can affect all three.
 The [architecture overview](docs/architecture.md) has a diagram and explains
 the tools that connect the pieces.
 
+![Build your own section header: one useful service, one backup, and one restore form an approachable path](docs/images/readme-header-build.png)
+
 ## If you want to build your own
 
 Start with one thing you would enjoy using, then learn what it takes to run and
@@ -65,6 +73,8 @@ the words you will encounter, and a path from a working application to a
 practice restore. It leads into the installation references when you are ready.
 The [worked examples](examples/README.md) show what the configuration files
 look like, using fictional values you can adapt.
+
+![Where to go next section header: a path through the starting guide, architecture, projects, and lessons](docs/images/readme-header-next.png)
 
 ## Where to go next
 
