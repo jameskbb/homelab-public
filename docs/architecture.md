@@ -107,6 +107,10 @@ anything that might be shared with friends is treated as a separate decision.
 The public version of the project never publishes the details that identify the
 home network or provide an administration path into it.
 
+Changes to the running lab follow a traffic-light policy that sorts every
+action by how hard it is to undo. [Green, yellow, red: who may change
+what](change-permissions.md) explains the levels and the approval rules.
+
 ## Applying the design to a first lab
 
 Start with one useful service, learn which of its data is precious, and try

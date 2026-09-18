@@ -131,6 +131,23 @@ also requires restic itself, not just an archive tool.
 elsewhere is a real offsite backup. Start there if a cloud destination feels
 like too much, and practice restoring from it.
 
+## A traffic-light policy for changes
+
+**The choice.** Every action on the lab is sorted into green, yellow, red, or
+never by how hard it is to reverse. Green proceeds without asking, yellow
+needs a stated undo and a yes, red needs a separate yes for each destructive
+action, and never stays off the table.
+
+**Why.** AI coding assistants help maintain the lab, and a script or a tired
+person can make the same mistakes. Sorting by reversibility puts the friction
+where the damage would be, and it makes backups part of the conversation
+before anything is deleted.
+
+**What it costs.** Routine changes take an extra sentence or two of
+explanation, and unattended work needs a written plan approved in advance.
+[Green, yellow, red: who may change what](change-permissions.md) has the
+full explanation.
+
 ## Paper for Minecraft, with deliberate updates
 
 **The choice.** Minecraft runs on Paper with the version pinned. Updates

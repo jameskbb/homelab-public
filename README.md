@@ -85,6 +85,7 @@ look like, using fictional values you can adapt.
 | What happened while building and fixing things | [Project walkthroughs](docs/projects.md) |
 | Which tools I used and where to learn them | [Tooling guide](docs/tooling-guide.md) |
 | Why I chose these tools and when simpler ones would do | [Why the lab is built this way](docs/decisions.md) |
+| How changes are sorted by how hard they are to undo | [Green, yellow, red: who may change what](docs/change-permissions.md) |
 | What the configuration files look like | [Worked examples](examples/README.md) |
 | What I would carry into another build | [What I learned](docs/what-i-learned.md) |
 
