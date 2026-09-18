@@ -52,7 +52,31 @@ drill returned every byte of world data and still was not playable until the
 server software was reinstalled and its settings reapplied. Adding that step to
 the automation, then exercising it in a second drill, was worth more than the
 first backup was. Selected application and game restores now have recorded
-results; rebuilding the whole physical server has not been exercised.
+results, and one VM has been rebuilt from its definitions; rebuilding the
+whole physical server has not been exercised.
+
+## Restoring a backup is not decontamination
+
+A backup copies the directories where an application keeps its state, which
+is exactly where anything unwanted would persist. So the answer to "this
+machine might be compromised" is not the newest backup. It is a fresh VM
+built from the written definitions, with a deliberate decision about what, if
+anything, to carry across. The experiments VM was rebuilt that way in a
+drill, and the only thing lost was session history. The
+[decisions page](decisions.md#rebuild-from-code-after-a-suspected-compromise)
+explains what a rebuild does and does not prove.
+
+## A procedure done twice gets a runbook
+
+A runbook exists so a task can be done correctly late at night by someone who
+has not thought about it in months. The private lab keeps one for any
+procedure performed more than once, anything risky, and every recovery path.
+Four rules made them useful: start with read-only checks so it is safe to
+stop partway, label every step with its
+[permission level](change-permissions.md), always include a way back or say
+plainly that there is none, and mark a recovery procedure untested until a
+drill proves it. The [runbook example](../examples/runbook-template.md)
+shows the shape with a fictional procedure.
 
 ## Public notes are a different document
 

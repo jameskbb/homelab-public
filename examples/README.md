@@ -12,6 +12,7 @@ from the [tooling guide](../docs/tooling-guide.md).
 | [start-page-and-monitor](start-page-and-monitor/) | One Docker Compose file that runs Homepage and Uptime Kuma, plus a small Homepage links file | [Your first homelab](../docs/start-here.md), steps 3 and 4 |
 | [repeatable-setup](repeatable-setup/) | An OpenTofu definition for one VM and an Ansible playbook that configures it, showing how the two jobs stay separate | [Your first homelab](../docs/start-here.md), step 5 |
 | [restic-practice.md](restic-practice.md) | A backup and restore exercise on disposable sample files | [Your first homelab](../docs/start-here.md), step 5 |
+| [runbook-template.md](runbook-template.md) | The shape of a written procedure, with permission levels on each step, a rollback, and an honest "last tested" line | [What I learned](../docs/what-i-learned.md#a-procedure-done-twice-gets-a-runbook) |
 
 Two habits apply to all of them. Keep secrets out of files you might share:
 passwords, keys, and tokens belong in environment variables or a secret

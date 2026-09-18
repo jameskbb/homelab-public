@@ -97,6 +97,30 @@ The levels only work if approval means something. A few rules protect that.
   chosen carefully so that "planned", "applied", and "verified" never blur
   into each other.
 
+## Words that keep the record honest
+
+The levels decide who says yes. A second habit decides what gets written
+down afterward, because a record that overstates progress is how the next
+person gets surprised. The lab uses a few state words precisely:
+
+| Word | What it means |
+| --- | --- |
+| Planned | Written down and reviewed. Nothing has changed yet. |
+| Applied | The change was made. It may or may not work. |
+| Partially applied | Some of it was made. The rest is named. |
+| Verified | Something was checked directly, with a date, and the check is recorded. |
+| Blocked | It cannot proceed, and the reason is written down. |
+
+A preview is not an apply. An installed package is not a configured service.
+A definition committed to Git is not a running machine. Milestones stay open
+until every "done when" condition has evidence, and the same care goes into
+recording failed, partial, and reverted work as successful work.
+
+Two more rules protect the record. A finding, gap, or risk gets a permanent
+identifier and is resolved by moving its entry, never by deleting it. And
+every restore test is logged with its date, how long it took, and what went
+wrong, so "the backup works" always points at a specific occasion.
+
 ## Working while the operator is away
 
 Sometimes the useful work is a list of yellow and red steps, and the person

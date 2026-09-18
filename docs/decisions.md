@@ -98,8 +98,10 @@ remains an option to add later; it was not chosen as the main approach.
 [Minecraft restore drill](projects.md#game-hosting-and-recovery) found that
 a backup which deliberately excluded the server software needed a reinstall
 step before the world was playable. Restores of selected data have been
-exercised; rebuilding a whole VM from its definitions and then restoring into
-it has not. Choosing data-level backup makes that gap easy to forget.
+exercised, and one VM has been deliberately destroyed and rebuilt from its
+definitions (see the next section). Restoring saved data into a freshly
+rebuilt VM has not been exercised. Choosing data-level backup makes that gap
+easy to forget.
 
 **A related detail.** Compressed archives defeat deduplication: a barely
 changed world that is recompressed nightly looks like entirely new data to
@@ -147,6 +149,102 @@ before anything is deleted.
 explanation, and unattended work needs a written plan approved in advance.
 [Green, yellow, red: who may change what](change-permissions.md) has the
 full explanation.
+
+## Rebuild from code after a suspected compromise
+
+**The choice.** If a VM is suspected of being compromised, or just needs
+periodic cleaning, the answer is to destroy it and rebuild it from its
+written definitions, not to restore its most recent backup. The experiments
+VM was rebuilt this way in a deliberate drill on 2026-08-28, carrying no
+previous state across, and every check passed on the fresh copy.
+
+**Why.** A backup copies the directories where an application keeps its
+state. That is exactly where unwanted persistent state would live, so
+restoring the newest backup onto a suspect machine can restore the problem
+along with the data. A backup is a data recovery tool. It is not an integrity
+recovery tool, and using it as one gives false confidence. Everything except
+the data is already described in Git, so a rebuild costs some minutes and the
+loss of session history, not the loss of function.
+
+**What it costs.** The decision about what to carry across has to be made
+before the old VM is destroyed, not after. For routine cleaning, the newest
+verified backup can be restored. For a suspected compromise, nothing is
+carried across, or only a backup from before a known-good date, which is one
+reason to keep older snapshots around. Credentials that were on the machine
+have to be rotated separately; a rebuild does not do that for you.
+
+**What it does not prove.** A rebuild of one VM says nothing about the
+physical host beneath it. It also re-downloads the same pinned software, so a
+compromised upstream release would be fetched again rather than filtered out.
+Pinning by checksum narrows that risk to the pinned release itself.
+
+## Retention that trims itself, with safety floors
+
+**The choice.** Old offsite snapshots are removed by a scheduled job that
+keeps a fixed number of daily, weekly, and monthly snapshots, then verifies
+the repository. The job was enabled only after each VM had a passing restore
+test, and reducing any of the keep counts is treated as a destructive change
+that needs its own approval.
+
+**Why.** The first version only uploaded and never deleted, and an earlier
+draft of this decision argued for keeping it that way because storage was
+cheap. That was overruled: retention that depends on a person remembering to
+prune is retention that silently does not happen, and unbounded growth is
+undesirable regardless of cost. Shrinking what gets uploaded in the first
+place, by excluding reproducible files, had already cut the growth rate and
+made the timing of this decision unhurried.
+
+**What it costs.** An unattended job that deletes backup data is exactly the
+kind of action the [permission policy](change-permissions.md) otherwise
+treats as needing approval every time. So the job carries guards that do not
+depend on the retention numbers being right:
+
+- The most recent few snapshots are always kept, whatever the date rules say,
+  so clock or time zone mistakes cannot empty the repository.
+- The job refuses to prune a nearly empty repository. Very few snapshots is
+  more likely a symptom of something wrong than something to tidy.
+- A full dry run is logged immediately before the real deletion, so the log
+  answers "what did it remove last week" without guesswork.
+- The repository is verified in the same run, so damage is caught by the job
+  that could have caused it.
+- It does nothing at all if the repository is locked, missing, or fails to
+  open.
+
+**When the simpler option is fine.** If your backups are small and you
+restore from them regularly, a manual prune after a reviewed dry run is a
+reasonable place to start. Automate it once you have watched it run and read
+what it would delete.
+
+## A separate VM for an AI assistant that runs tools
+
+**The choice.** The personal experiments VM exists largely to hold one AI
+assistant that can read messages, run commands, and use tools on the
+operator's behalf. It runs on its own VM with its own operating system, not
+alongside the applications or the game servers, and never on the physical
+host.
+
+**Why.** An assistant like this handles untrusted content, executes tools, and
+stores its own credentials. Its security model is closer to a server that
+runs arbitrary code than to an ordinary dashboard. Sharing an operating
+system with the applications VM would let a mistake by the assistant or one
+of its plugins reach the start page and monitoring data. Sharing with the
+games VM would put it next to game worlds and a container system that already
+holds broad authority. A VM boundary keeps those mistakes contained, and the
+VM can be rebuilt from its definitions on its own schedule, as the previous
+section describes.
+
+**How it starts small.** The first deployment listens only to itself, with no
+public exposure, no reverse proxy, and no inbound messaging channel. No
+credentials for the other VMs are copied into it. Command execution, file
+changes, and other capabilities begin denied and are added one at a time,
+each with a written reason. The software is installed at a pinned release
+with automatic updates disabled, and its state has its own backup.
+
+**What it costs.** One more operating system to patch, monitor, back up, and
+document. Container access inside the VM is still powerful; the boundary
+limits the damage a bad tool can do, but does not make one harmless. And
+keeping the assistant reachable only from itself means every additional way
+to talk to it is a separate decision.
 
 ## Paper for Minecraft, with deliberate updates
 

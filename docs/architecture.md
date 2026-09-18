@@ -30,6 +30,10 @@ files. The VMs share the desktop's processor, memory, and physical drives.
 | Games | Game management plus Minecraft and cooperative games | Game software and the supporting software it needs can be managed together. |
 | Personal experiments | Private automation and AI experiments | Trying something new has a separate place for its software and settings. |
 
+The experiments VM also acts as a trust boundary: an AI assistant that can
+run tools lives there, apart from the applications and game data, for the
+reasons given on the [decisions page](decisions.md#a-separate-vm-for-an-ai-assistant-that-runs-tools).
+
 Application **containers** package applications with the supporting software
 they need. They share the core of the operating system in their VM. Docker
 Compose describes how the everyday application containers run; Pterodactyl
