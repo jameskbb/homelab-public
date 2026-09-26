@@ -38,6 +38,7 @@ a backup. The learning comes from looking after something I actually use.
 | Service monitoring | Checks whether applications and games respond, helping me notice interruptions. |
 | Game hosting | Runs Minecraft and cooperative-game servers, giving friends a shared place to play. |
 | Personal experiments | Provides a separate environment for trying private automation and AI projects. |
+| Automated test jobs | Builds and tests code from my own private projects on my own hardware, kept on a VM of its own. |
 | Backups and recovery practice | Keeps copies of selected application and game data and tests how to bring them back. |
 
 The start page uses **Homepage**, and the monitor uses **Uptime Kuma**. Those are
@@ -54,9 +55,10 @@ memory, and two internal drives. Software called **Proxmox VE** lets it run
 several **virtual machines (VMs)**: computers created in software, each with
 its own operating system.
 
-I use one VM for applications, one for games, and one for personal experiments.
-That gives their settings and updates separate places to live. They still share
-the physical desktop, so a problem with that computer can affect all three.
+I use four VMs: one for applications, one for games, one for personal
+experiments, and one for automated test jobs. That gives their settings and
+updates separate places to live. They still share the physical desktop, so a
+problem with that computer can affect all four.
 The [architecture overview](docs/architecture.md) has a diagram and explains
 the tools that connect the pieces.
 

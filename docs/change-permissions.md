@@ -64,6 +64,15 @@ needs its own approval, every time, immediately before it runs. Deleting a
 virtual machine, removing a disk, dropping a backup, formatting a drive, and
 rebooting the physical host are all red.
 
+There is one narrow, written exception: a [weekly overnight
+reboot](decisions.md#a-weekly-reboot-that-refuses-when-unsure) of the whole
+lab. Turning it on took its own red approval, given only after the schedule,
+the safety checks, the set of VMs it may reboot, the failure behavior, and
+the rollback were reviewed. Its scheduled runs need no further approval, but
+any change to those reviewed parts needs a new review and a new approval. It
+cannot be used to reboot the physical host on demand; an unscheduled reboot
+is still red, every time.
+
 Before asking, the request has to state three things: what will be destroyed,
 whether a backup of it exists, and whether it is recoverable. If a
 tool's preview shows that something will be destroyed or replaced, those

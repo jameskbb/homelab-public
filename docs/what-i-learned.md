@@ -66,6 +66,29 @@ drill, and the only thing lost was session history. The
 [decisions page](decisions.md#rebuild-from-code-after-a-suspected-compromise)
 explains what a rebuild does and does not prove.
 
+## A safety check that refuses is doing its job
+
+The lab is set to restart itself weekly, overnight, but only after a list of
+checks passes; any failed check skips that week. A completed scheduled reboot
+is not yet recorded. The first two scheduled runs refused
+to reboot anything, because the check itself had a bug (an invalid command
+option). That was annoying and also exactly right: nothing was harmed, the fix
+was small, and the failure pointed at the check rather than at the lab. A
+safety check that stops when unsure is only useful if you treat its refusal
+as information, not as an obstacle. The
+[decisions page](decisions.md#a-weekly-reboot-that-refuses-when-unsure)
+explains the checks and their limits.
+
+## Give each visitor only the door they need
+
+Remote access was the one convenience I wanted to add carefully. Tailscale
+reaches the VMs from away, but the physical host that can delete every VM
+deliberately did not join, so a stolen phone cannot reach it. Friends who play
+games get only the game ports they are given, never the administrative network.
+The cost is real: fixing the physical host still means being at home. See
+[private remote access](decisions.md#private-remote-access-without-opening-the-router)
+and [letting friends join games](decisions.md#letting-friends-join-games-from-outside).
+
 ## A procedure done twice gets a runbook
 
 A runbook exists so a task can be done correctly late at night by someone who

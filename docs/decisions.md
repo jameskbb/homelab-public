@@ -19,12 +19,13 @@ own virtual machine (VM). Containers run inside those VMs.
 
 **Why.** Proxmox is free, handles both VMs and containers, has a browser
 interface, and has an OpenTofu provider, which made repeatable VM creation
-possible later. Separate VMs give applications, games, and experiments their
-own operating system and update schedule. Running Docker directly on the
-desktop was considered and rejected because it offered no isolation between
-jobs and no path to running software that does not come as a container.
+possible later. Separate VMs give applications, games, experiments, and
+automated test jobs their own operating system and update schedule. Running
+Docker directly on the desktop was considered and rejected because it offered
+no isolation between jobs and no path to running software that does not come
+as a container.
 
-**What it costs.** Three operating systems to update instead of one, and the
+**What it costs.** Four operating systems to update instead of one, and the
 physical desktop remains a single point of failure for all of them. There is
 no second machine, so no clustering or failover; recovery depends on being
 able to rebuild.
@@ -59,7 +60,7 @@ own, or a single-game container definition, is a perfectly good starting
 point. The [tooling guide](tooling-guide.md#paper-the-minecraft-server-software)
 suggests learning Paper first for that reason.
 
-## OpenTofu and Ansible for three virtual machines
+## OpenTofu and Ansible for the virtual machines
 
 **The choice.** VM definitions are written for OpenTofu, and operating-system
 configuration is written for Ansible. Neither is done by hand in the Proxmox
@@ -74,8 +75,9 @@ separate tools makes it clear which layer to change.
 **What it costs.** Definitions, provider versions, and a state file to look
 after. OpenTofu's state records everything it manages and can contain
 sensitive values, so it needs private, recoverable storage. Automation also
-front-loads effort: three VMs could be clicked together faster than they
-could be defined.
+front-loads effort: the first three VMs could have been clicked together
+faster than they could be defined, and the payoff arrived later, when a
+fourth VM was added from the same patterns.
 
 **When the simpler option is fine.** With one VM, clicking through the
 installer and keeping good notes is reasonable. Automate the steps once you
@@ -149,6 +151,39 @@ before anything is deleted.
 explanation, and unattended work needs a written plan approved in advance.
 [Green, yellow, red: who may change what](change-permissions.md) has the
 full explanation.
+
+## A weekly reboot that refuses when unsure
+
+**The choice.** The whole lab, the physical host and every VM, restarts once
+a week, overnight, with nobody awake. It is one narrow, reviewed exception to
+the rule that rebooting the physical host is red; the
+[permission policy](change-permissions.md#red-destructive-one-approval-per-action)
+explains how it was approved and what still needs approval.
+
+**Why.** The operator wanted a routine restart of everything, not one that
+only happens in an emergency. Approving the rules once, carefully, is the only
+way to do that with nobody awake.
+
+**How it stays safe.** Before rebooting, a script checks that it is on the
+right machine, on mains power, with core services healthy, no failed services,
+storage active, no task running, and exactly the set of VMs it may reboot
+running, each set to start at boot and answering through its guest agent (a
+small helper inside the VM). Game players get a warning first. If any check
+fails, that week is skipped; it never forces a VM down or catches up later.
+After boot, a second check records any VM that did not come back. To fit
+around it, a backup job moved earlier and game servers now start at boot.
+
+**What actually happened.** The first two scheduled runs refused because the
+check itself had a bug (an invalid command option), so nothing was rebooted:
+the fail-safe working as designed. It was fixed on 2026-09-12. Adding the
+fourth VM meant updating the set of VMs it may reboot. No completed weekly
+reboot is recorded yet.
+
+**What it costs.** The monitor lives on the physical host too, so it cannot
+alert anyone during the reboot, and a reboot installs no updates.
+
+**When the simpler option is fine.** Rebooting by hand after updates, while
+you watch, is perfectly reasonable.
 
 ## Rebuild from code after a suspected compromise
 
@@ -245,6 +280,96 @@ document. Container access inside the VM is still powerful; the boundary
 limits the damage a bad tool can do, but does not make one harmless. And
 keeping the assistant reachable only from itself means every additional way
 to talk to it is a separate decision.
+
+## A separate VM for automated test jobs
+
+**The choice.** A fourth VM, the test jobs VM, runs test and build jobs for
+the operator's private code using GitHub Actions self-hosted runners. A runner
+is a small program that connects out to GitHub, waits for a queued job, and
+runs its steps locally, with no inbound port and no router change. A real job
+ran end to end on 2026-09-20. Docker access for jobs was added on 2026-09-26
+for a Minecraft plugin test project (a locked-down test server in a container,
+with bots playing scenarios); that project's first real job is still pending.
+
+**Why.** Every workflow step is code that runs on the machine, and the other
+VMs hold monitoring secrets, game worlds, and the AI assistant's credentials;
+like the experiments VM, it gets its own boundary. There is one runner per
+repository, because a personal GitHub account supports nothing broader. Each
+runner takes exactly one job, then registers again fresh, so no job inherits
+the previous job's working files.
+
+**Private repositories only, enforced in code.** Each runner checks that its
+repository is private before starting, and a regular check stops any runner
+whose repository has become public. On a public repository, a pull request
+from a stranger's copy (a fork) could run the stranger's code on the home
+network. The access token the runners use is narrowly scoped and stored
+encrypted, never in Git.
+
+**What it costs.** The home network is flat by policy, so a job can reach the
+other machines; that is accepted only because the repositories are private.
+Docker access gives every repository's jobs effectively full administrator
+access to the test jobs VM, and Docker images and caches outlive jobs; a
+weekly cleanup limits growth but is not isolation. The
+physical host's memory is now nearly all reserved across the four VMs, and
+resizing the test jobs VM needed a restart.
+
+**When the simpler option is fine.** GitHub's own hosted runners need no
+maintenance and never touch the home network.
+
+## Private remote access without opening the router
+
+**The choice.** Tailscale provides access to the lab from away from home. It
+builds an encrypted private network between your own devices; each device
+connects outward, so there is no port forward and no router change. It was
+chosen on 2026-08-30 and applied on 2026-09-12. Only the VMs joined. The
+physical host deliberately did not, and only the operator's own
+devices are on it. The home network stays the primary path, Tailscale sits
+alongside it, and the physical console is the final fallback.
+
+**Why.** Keeping the physical host off means a stolen phone with a live
+session cannot reach the machine that can delete every VM. A "subnet router",
+one VM sharing access to the whole home network, was the least work and was
+rejected: on a flat network, one compromised device would expose everything in
+the house. The setup automation refuses to run on the physical host and
+refuses to share routes or act as an exit node (a device that forwards all
+your internet traffic).
+
+**What it costs.** Fixing the physical host still means being at home. Device
+keys expire by default, months later, and a device then silently drops off;
+expiry was turned off on the server VMs, and the automation checks it on every
+run.
+
+**Where it stands.** The access rules currently let administrative
+connections reach only the experiments VM and the admin computer; the
+applications and games VMs accept nothing over it yet. A test from away from
+home is not recorded yet.
+
+**When the simpler option is fine.** If you only need the lab while you are
+home, you do not need remote access at all.
+
+## Letting friends join games from outside
+
+**The choice.** Friends reach a game server through a name that follows the
+home internet address, plus a router port forward for that one server. A home
+address can change, so a small updater (a container on the applications VM)
+keeps a public name (a DNS record, the internet's address-book entry) pointed
+at the current address. It makes only outbound calls, and the monitor flags it
+if updates stop. It was applied on 2026-08-18.
+
+**Why.** A name on its own exposes nothing; the port forward is what lets
+outside traffic reach a single game server. Players reach only the game
+ports they are given, never the administrative network, which is Tailscale's
+job and for the operator only.
+
+**What it costs.** Router changes are on the never list for automation and
+AI assistants, so the operator makes them by hand, and the lab notes record
+them as reported by the operator rather than independently verified.
+Forwards exist for some of the cooperative games; join tests from outside
+the house are not recorded yet. Every forward is a door to one server that
+has to be kept updated.
+
+**When the simpler option is fine.** If everyone plays from inside the
+house, you need no forwards at all.
 
 ## Paper for Minecraft, with deliberate updates
 

@@ -1,9 +1,10 @@
 # Architecture overview
 
-One physical computer runs separate environments for applications, games, and
-personal experiments. Each environment is a **virtual machine (VM)**: a
-computer created in software, with its own operating system. Mine use Debian,
-a Linux operating system that provides the foundation for running applications.
+One physical computer runs separate environments for applications, games,
+personal experiments, and automated test jobs. Each environment is a **virtual
+machine (VM)**: a computer created in software, with its own operating system.
+Mine use Debian, a Linux operating system that provides the foundation for
+running applications.
 
 If these ideas are new, [Your first homelab](start-here.md) explains the main
 terms and walks through a small starting project.
@@ -17,6 +18,7 @@ flowchart TD
     proxmox --> apps["Applications VM: start page and monitoring"]
     proxmox --> games["Games VM: shared game worlds"]
     proxmox --> experiments["Personal experiments VM: a place to try things"]
+    proxmox --> tests["Test jobs VM: runs automated checks for my own code"]
 ```
 
 ## Why virtual computers?
@@ -29,10 +31,19 @@ files. The VMs share the desktop's processor, memory, and physical drives.
 | Applications | A start page and checks that services respond | Everyday applications have their own settings and updates. |
 | Games | Game management plus Minecraft and cooperative games | Game software and the supporting software it needs can be managed together. |
 | Personal experiments | Private automation and AI experiments | Trying something new has a separate place for its software and settings. |
+| Automated test jobs | Builds and tests code from my own private repositories, using GitHub Actions, GitHub's built-in automation service | Each job runs code on the machine, so it is kept apart from everything else. |
 
 The experiments VM also acts as a trust boundary: an AI assistant that can
 run tools lives there, apart from the applications and game data, for the
 reasons given on the [decisions page](decisions.md#a-separate-vm-for-an-ai-assistant-that-runs-tools).
+
+The test jobs VM, added in September 2026, is a second trust boundary of the
+same kind. Every step of an automated test job is code that runs on that
+machine, so it lives apart from the monitoring, game worlds, and AI assistant.
+It accepts jobs only from private repositories, and it still shares a flat
+home network with the other VMs; [the decisions
+page](decisions.md#a-separate-vm-for-automated-test-jobs) covers why, and the
+costs.
 
 Application **containers** package applications with the supporting software
 they need. They share the core of the operating system in their VM. Docker
@@ -42,7 +53,7 @@ its virtual computer.
 
 The tradeoff is more operating systems to update. Separation can reduce
 interference from software changes, but the physical desktop failing or running
-out of memory or processing capacity can affect all three environments.
+out of memory or processing capacity can affect all four environments.
 [Why the lab is built this way](decisions.md) explains this and the other
 choices, including when a simpler setup would do.
 
@@ -104,12 +115,34 @@ flowchart LR
 The [recovery walkthrough](projects.md#game-hosting-and-recovery) describes
 the drills that exercised this path and what they did and did not cover.
 
+The whole lab is set to restart itself weekly, overnight. Before it reboots,
+the physical host runs a list of checks: that it is the right machine, services
+and storage are healthy, no administrative task is in progress, and exactly the
+expected VMs are up. If any check fails, it skips that week rather than forcing
+anything. A completed weekly reboot is not yet recorded. A reboot installs no
+updates, and the monitor cannot report while the physical host is restarting.
+[A weekly reboot that refuses when
+unsure](decisions.md#a-weekly-reboot-that-refuses-when-unsure) explains the
+design.
+
 ## Boundaries that matter
 
 The lab is designed for private use. Administrative services stay private, and
 anything that might be shared with friends is treated as a separate decision.
 The public version of the project never publishes the details that identify the
 home network or provide an administration path into it.
+
+For reaching the lab while away, I use Tailscale, an encrypted private network
+between my own devices that needs no router changes. The VMs joined it; the
+physical host deliberately did not. [Private remote access without opening the
+router](decisions.md#private-remote-access-without-opening-the-router) has the
+details.
+
+Friends reach game servers a different way: a stable name for the home internet
+address, plus router port forwards that I make by hand. Players reach only the
+game they are given, never the administrative network. [Letting friends join
+games from outside](decisions.md#letting-friends-join-games-from-outside)
+explains the tradeoffs.
 
 Changes to the running lab follow a traffic-light policy that sorts every
 action by how hard it is to undo. [Green, yellow, red: who may change

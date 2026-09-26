@@ -1,11 +1,12 @@
 # Project walkthroughs
 
-These three projects explain the work behind the useful parts of the lab,
+These four projects explain the work behind the useful parts of the lab,
 including things that needed fixing. Each connects a practical problem to the
 tools used and something you can learn from the result.
 
 Start with the everyday applications below, then explore how setup became
-repeatable and what it took to recover a game world. If you are planning your
+repeatable, what it took to recover a game world, and how automated test jobs
+got their own machine. If you are planning your
 first project, [Your first homelab](start-here.md) introduces the terms and a
 smaller starting point.
 
@@ -121,10 +122,60 @@ exercises cover selected applications and the two Minecraft environments.
 They do not establish recovery for every game, a whole VM, or the entire
 physical server.
 
+**Adding more games turned out to be easy:** this is the part of the lab I am
+proudest of. Pterodactyl's eggs, its reusable install recipes, made each new
+game cheap to add. The lab now runs five game servers: the two Minecraft worlds
+and several cooperative games. Two of the cooperative games were created on the same day in
+September 2026. Each new game follows the same small automation pattern, copied
+from the one before: create the server from its egg, keep the join password in
+a local file that Git ignores, and add a service that starts the game again
+after the weekly reboot.
+
+**The memory tradeoff:** each game server has a memory ceiling in the panel, and the
+fifth one pushed the total of those ceilings above what the games VM actually
+has. A ceiling is a limit, not a reservation, and measured use was under a
+third of the total, so I accepted this **overcommit**. If every server peaked
+at once, the VM would stop a process, probably the largest game. Any new server
+now starts with a look at measured memory. Two caveats remain: join tests from
+real game clients are still pending for the newest servers, and the newer
+games' saves are not yet in the offsite backup, unlike the Minecraft worlds.
+
 For your own version, practice with disposable files first, then recover one
 application in a separate test environment. Check the application as well as
 the restored files. See [restic and recovery](tooling-guide.md#restic-encrypted-backups-with-a-recovery-path)
 and [the game-hosting tools](tooling-guide.md#game-hosting).
+
+## Automated test jobs on home hardware
+
+**The problem:** automated test and build jobs for my own private code
+repositories needed somewhere to run. GitHub Actions can run them on GitHub's
+machines, but I wanted to try running them on the lab's hardware. Every step of
+such a job is code that runs on whichever machine picks it up.
+
+**What I built:** in September 2026 I gave those jobs a fourth VM of their
+own, running GitHub Actions **self-hosted runners** (small programs on my
+hardware that pick up queued jobs from GitHub). I kept them to my private
+repositories and later added Docker so jobs can start test servers in
+containers. How the runners stay fresh and refuse public repositories is
+explained in
+[Why the lab is built this way](decisions.md#a-separate-vm-for-automated-test-jobs).
+
+**What I checked:** a real job ran from start to finish on 2026-09-20. The
+first real job that uses Docker, for a Minecraft plugin test project, is still
+pending.
+
+**The tradeoff:** the home network is flat, so a job can reach the other
+machines at the network level; that is acceptable only because the
+repositories are my own and private. Giving jobs Docker access is effectively
+full administrator access on that VM, and cached Docker images outlive single
+jobs. GitHub's hosted runners are the simpler option: nothing to maintain and
+no exposure of the home network. The reasoning is in
+[Why the lab is built this way](decisions.md#a-separate-vm-for-automated-test-jobs).
+
+For your own version, start with GitHub's hosted runners. Move a job to your
+own hardware only for a private repository, on a machine that holds nothing
+you would mind a job reading. See
+[GitHub Actions runners](tooling-guide.md#github-actions-runners-test-jobs-on-your-own-hardware).
 
 [Back to the homelab overview](../README.md) |
 [Plan a first lab](start-here.md) |

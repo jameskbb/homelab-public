@@ -21,7 +21,8 @@ steps you want to repeat, and practice a restore before storing important data.
 Explore [the foundation](#the-foundation),
 [repeatable setup](#making-setup-repeatable),
 [everyday services and recovery](#everyday-services-and-recovery),
-[game hosting](#game-hosting), or
+[game hosting](#game-hosting),
+[remote access and automated jobs](#remote-access-and-automated-jobs), or
 [the build order](#a-practical-build-order-for-your-own-version).
 
 For the recorded checks connecting these tools, read the
@@ -44,6 +45,8 @@ containers run inside VMs.
 | Run everyday applications | Docker Engine and Compose; Homepage | Applications VM |
 | Check availability and protect data | Uptime Kuma; restic | Services and their backup workflows |
 | Host games | Pterodactyl Panel and Wings; Paper | Games VM |
+| Reach the lab from away | Tailscale | The VMs and my own devices |
+| Run automated test jobs | GitHub Actions self-hosted runners; Docker | Test jobs VM |
 
 Git keeps changes to settings and documentation reviewable. A **commit** is a
 saved checkpoint of changes to files. Saving that checkpoint does not itself
@@ -252,8 +255,11 @@ in Docker containers. Its **Panel** is the web interface; **Wings** is the
 service that runs the game containers.
 [Pterodactyl introduction and installation links](https://pterodactyl.io/project/introduction.html).
 
-**What worked here:** it manages the lab's Minecraft environments and other
-game-server workloads. It gives those workloads their own management workflow.
+**What worked here:** it manages five game servers: the Minecraft worlds and
+several cooperative games. Eggs made adding games cheap; two were added on the
+same day, each following the same small automation pattern as the one before.
+The [game-hosting walkthrough](projects.md#game-hosting-and-recovery) covers
+the memory tradeoff and what is still unchecked.
 
 **First project:** after becoming comfortable with Linux and Docker, follow
 both the Panel and Wings setup documentation and run one test game server.
@@ -283,6 +289,46 @@ compatibility and the result in-game.
 
 For a first Minecraft-only experiment, you can learn Paper on its own before
 adding a management panel.
+
+## Remote access and automated jobs
+
+### Tailscale: private access from away
+
+Tailscale builds an encrypted private network between your own devices. Each
+device connects outward, so no router change or port forward is needed.
+[What is Tailscale?](https://tailscale.com/kb/1151/what-is-tailscale).
+
+**What worked here:** the VMs joined in September 2026; the physical host
+deliberately did not. The automation refuses to share the whole home network through one
+VM. The access rules currently allow only a small part of the lab, and a test
+from away from home has not been recorded yet. By default, device keys expire
+and a device quietly drops off, so expiry was turned off for the server VMs and
+the automation checks it on every run. The
+[decisions page](decisions.md#private-remote-access-without-opening-the-router)
+explains the tradeoffs.
+
+**First project:** join two of your own devices, such as a laptop and one test
+VM, and confirm one can reach the other. Keep your normal home path working
+alongside it, and leave the machine that runs everything else out of the private network until you
+have decided whether it belongs.
+
+### GitHub Actions runners: test jobs on your own hardware
+
+A self-hosted runner is a small program that connects outward to GitHub, waits
+for a queued automated job, and runs its steps on your machine.
+[About self-hosted runners](https://docs.github.com/en/actions/hosting-your-own-runners/managing-self-hosted-runners/about-self-hosted-runners).
+
+**What worked here:** runners were installed on a separate VM, and a real job
+ran end to end on 2026-09-20. Each runner takes one job, then starts fresh, and
+refuses to serve a public repository. Docker was added later for jobs that
+start test servers. The
+[walkthrough](projects.md#automated-test-jobs-on-home-hardware) covers the
+costs, including that a job can reach other machines on a flat home network.
+
+**First project:** use GitHub's hosted runners first; they need no maintenance.
+If you try your own, use a private repository and a disposable VM that holds
+nothing else. On a public repository, a stranger's pull request could run their
+code on your network.
 
 ## A practical build order for your own version
 
