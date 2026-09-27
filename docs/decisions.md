@@ -160,7 +160,7 @@ the rule that rebooting the physical host is red; the
 [permission policy](change-permissions.md#red-destructive-one-approval-per-action)
 explains how it was approved and what still needs approval.
 
-**Why.** The operator wanted a routine restart of everything, not one that
+**Why.** The goal was a routine restart of everything, not one that
 only happens in an emergency. Approving the rules once, carefully, is the only
 way to do that with nobody awake.
 
@@ -284,7 +284,7 @@ to talk to it is a separate decision.
 ## A separate VM for automated test jobs
 
 **The choice.** A fourth VM, the test jobs VM, runs test and build jobs for
-the operator's private code using GitHub Actions self-hosted runners. A runner
+private code projects using GitHub Actions self-hosted runners. A runner
 is a small program that connects out to GitHub, waits for a queued job, and
 runs its steps locally, with no inbound port and no router change. A real job
 ran end to end on 2026-09-20. Docker access for jobs was added on 2026-09-26
@@ -322,8 +322,7 @@ maintenance and never touch the home network.
 builds an encrypted private network between your own devices; each device
 connects outward, so there is no port forward and no router change. It was
 chosen on 2026-08-30 and applied on 2026-09-12. Only the VMs joined. The
-physical host deliberately did not, and only the operator's own
-devices are on it. The home network stays the primary path, Tailscale sits
+physical host deliberately did not, and only my own devices are on it. The home network stays the primary path, Tailscale sits
 alongside it, and the physical console is the final fallback.
 
 **Why.** Keeping the physical host off means a stolen phone with a live
@@ -358,12 +357,12 @@ if updates stop. It was applied on 2026-08-18.
 
 **Why.** A name on its own exposes nothing; the port forward is what lets
 outside traffic reach a single game server. Players reach only the game
-ports they are given, never the administrative network, which is Tailscale's
-job and for the operator only.
+ports they are given, never the administrative network. Administrative access is
+Tailscale's job, and friends are never added to it.
 
 **What it costs.** Router changes are on the never list for automation and
-AI assistants, so the operator makes them by hand, and the lab notes record
-them as reported by the operator rather than independently verified.
+AI assistants, so they are made by hand. The automation cannot see the
+router, so it cannot confirm that a forward is set up correctly.
 Forwards exist for some of the cooperative games; join tests from outside
 the house are not recorded yet. Every forward is a door to one server that
 has to be kept updated.

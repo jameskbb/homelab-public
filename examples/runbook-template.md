@@ -98,7 +98,15 @@ here explicitly and describe what would be unrecoverable.
 
 ## Notes
 
-Anything that surprised you last time goes here. Update it after each run.
+This section records what surprised someone on an earlier run, and it is
+updated after each one. In this fictional example:
+
+- The page can show the old settings for a few seconds after the restart
+  because the browser cached it. Reload before deciding the change failed.
+- The config check in the pre-flight step catches syntax errors only. A
+  valid file with a wrong link still passes, so the final look at the page
+  matters.
+
 A runbook explains how to do something; it does not grant approval for it.
 
 [Back to the worked examples](README.md)
