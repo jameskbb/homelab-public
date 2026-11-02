@@ -2,6 +2,11 @@
 
 ![My Homelab title card: one retired desktop branches into applications, games, and experiments in a warm home workspace](docs/images/readme-title-homelab.png)
 
+<p align="center">
+  <a href="https://github.com/jameskbb/homelab-public/actions/workflows/checks.yml"><img alt="Checks" src="https://img.shields.io/github/actions/workflow/status/jameskbb/homelab-public/checks.yml?branch=main&style=for-the-badge&logo=githubactions&logoColor=white&label=Checks"></a>
+  <a href="LICENSE.md"><img alt="License" src="https://img.shields.io/badge/License-CC%20BY%204.0-blue?style=for-the-badge&logo=creativecommons&logoColor=white"></a>
+</p>
+
 This is a guide to the small home server I built from a retired desktop:
 what I use it for, why the pieces are there, and what you could try in your own
 setup. If a friend sent you this and you have never run a server, start here.
