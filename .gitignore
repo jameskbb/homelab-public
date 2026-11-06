@@ -1,6 +1,7 @@
-# Local agent context stays out of public commits, including in subdirectories.
-AGENTS.md
-CLAUDE.md
+# Per-machine assistant state.
+.claude/settings.local.json
+.claude/worktrees/
+.planning/
 
 # Never add private configuration or recovered data to this public repository.
 .env
