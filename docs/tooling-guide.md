@@ -253,7 +253,7 @@ separately from the server.
 Pterodactyl provides a game-server management interface and runs game servers
 in Docker containers. Its **Panel** is the web interface; **Wings** is the
 service that runs the game containers.
-[Pterodactyl introduction and installation links](https://pterodactyl.io/project/introduction.html).
+[About Pterodactyl](https://docs.pterodactyl.io/v1/project/about).
 
 **What worked here:** it manages five game servers: the Minecraft worlds and
 several cooperative games. Eggs made adding games cheap; two were added on the
@@ -262,10 +262,11 @@ The [game-hosting walkthrough](projects.md#game-hosting-and-recovery) covers
 the memory tradeoff and what is still unchecked.
 
 **First project:** after becoming comfortable with Linux and Docker, follow
-both the Panel and Wings setup documentation and run one test game server.
-An **egg** is Pterodactyl's reusable installation and startup recipe for a
-game. Select a recipe that matches the game you want to run.
-[Panel, Wings, and egg terminology](https://pterodactyl.io/project/terms.html).
+both the [Panel](https://docs.pterodactyl.io/v1/panel/getting-started) and
+[Wings](https://docs.pterodactyl.io/v1/wings/installing) setup documentation
+and run one test game server. An **egg** is Pterodactyl's reusable installation
+and startup recipe for a game. Select a recipe that matches the game you want
+to run from the [egg library](https://eggs.pterodactyl.io/).
 
 This is a larger project than a dashboard: the Panel has supporting services
 to maintain, and game data still needs backups. In this lab, game containers
